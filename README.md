@@ -1,140 +1,97 @@
 ## R을 활용한 데이터 마이닝 2기 Review
 
-**1. CollectData.R**
-  -
-  - 
-  -
-  
+**1. BCP.R**
+  - w
+  - w
 
-
-**2. Collect_Stock_data.R**
-  -
-  - 
-  -
+**2. CollectData.R**
+  - w
+  - w
   
-
-**3. DecessionTree.R**
-  -
-  - 
-  -
+**3. Collect_stock_data.R**
+  - w
+  - w
   
+**4. DecesionTree.R**
+  - w
+  - w
 
-**4. FeatureSetTA.R**
-  -
-  - 
-  -
-  
+**5. FeatureSetTA.R**
+  - w
+  - w
 
-**5. FeatureSetTAP.R**
-  -
-  - 
-  -
-  
+**6. FeatureSetTAP.R**
+  - w
+  - w
 
-**6. GoldenCross.R**
-  -
-  - 
-  -
+**7. GoldenCross.R**
+  - w
+  - w
   
+**8. HClust(Pattern).R**
+  - w
+  - w
   
-**7. HClust(Pattern).R**
-  -
-  - 
-  -
+**9. HiddenMarkovModel_example.R**
+  - w
+  - w
   
+**10. K-Means(Pattern).R**
+  - w
+  - w
   
-**8. HiddenMarkovModel_example.R**
-  -
-  - 
-  -
-
-
-**9. K-Means(Pattern).R**
-  -
-  - 
-  -
+**11. NeuralNet_filedata.R**
+  - w
+  - w
   
-
-**10. NeuralNet_filedata.R**
-  -
-  - 
-  -
-
-
-**11. NeuralNet_webdata.R**
-  -
-  - 
-  -
+**12. NeuralNet_webdata.R**
+  - w
+  - w
   
-
-**12. RandomForest.R**
-  -
-  - 
-  -
+**13. RandomForest.R**
+  - w
+  - w
   
-
-**13. Smoothing.R**
-  -
-  - 
-  -
+**14. Smoothing.R**
+  - w
+  - w
   
-
-**14. Technical_analysis.R**
-  -
-  - 
-  -
+**15. Technical_analysis.R**
+  - w
+  - w
   
-
-**15. baggingSVM.R**
-  -
-  - 
-  -
+**16. baggingSVM.R**
+  - w
+  - w
   
-
-**16. boostingDT.R**
-  -
-  - 
-  -
+**17. boostingDT.R**
+  - w
+  - w
   
-
-**17. hybrid(knn).R**
-  -
-  - 
-  -
+**18. hybrid(knn).R**
+  - w
+  - w
   
-
-**18. stock_price_simulation.R**
-  -
-  - 
-  -
+**19. stock_price_simulation.R**
+  - w
+  - w
   
-
-**19. svm.R**
-  -
-  - 
-  -
+**20. svm.R**
+  - w
+  - w
   
-
-**20. svmTA.R**
-  -
-  - 
-  -
+**21. svmTA.R**
+  - w
+  - w
   
-
-**21. 문서검색분류.R**
-  -
-  - 
-  -
+**22. 문서검색분류.R**
+  - w
+  - w
   
-
-**22. 토픽모델(예시).R**
-  -
-  - 
-  -
+**23. 토픽모델(예시).R**
+  - w
+  - w
   
-
-**23. 토픽분류(예시).R**
-  -
-  - 
-  -
-  
+**24. 토픽분류(예시).R**
+  - w
+  - w
