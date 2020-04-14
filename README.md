@@ -16,8 +16,12 @@
   - w
 
 **5. FeatureSetTA.R**
-  - w
-  - w
+  - 주가의 9개의 기술적 분석지표값으로 구성된 train/test data set 생성
+  - ATR변동성, SMI, ADX, Aroon추세, Bollinger Band, MACD, OBV, 5일 이평 등의 기술적분석 지표
+  
+**5. knn.R**
+  - k-NN 알고리즘 : https://ko.wikipedia.org/wiki/K-최근접_이웃_알고리즘
+  - 주가의 기술적분석 지표 데이터를 KNN알고리즘으로 분석하여 내일 주가의 상승/하락을 예측  
 
 **6. FeatureSetTAP.R**
   - w
@@ -52,9 +56,8 @@
   - w
   
 **14. Smoothing.R**
-  - w
-  - w
-  
+  - 시계열 데이터 평활화(단순이동평균, Kernel Regression, Spline)
+    
 **15. Technical_analysis.R**
   - w
   - w
