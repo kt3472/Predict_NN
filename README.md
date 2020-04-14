@@ -23,8 +23,9 @@
   - w
   - w
 
-**7. GoldenCross.R**
-  - 기술적분석의 이동평균선 골든크로스/데드크로스 지표를 이용한 Back testing  
+**7. GoldenCross.R / GoldenCross_test.R**
+  - 기술적분석의 이동평균선 골든크로스/데드크로스 지표를 이용한 Back testing
+  - 단기/장기 이동평균 기간을 달리하여 Back testing 후 최적 이동평균 기간을 찾음
   
 **8. HClust(Pattern).R**
   - w
