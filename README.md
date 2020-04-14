@@ -12,8 +12,8 @@
 
 
 **4. DecesionTree.R**
-  - w
-  - w
+  - Decesion Tree 알고리즘 : https://ratsgo.github.io/machine%20learning/2017/03/26/tree/
+  - 주가의 기술적분석 지표 데이터를 Decision Tree 알고리즘으로 분석하여 내일 주가의 상승/하락을 예측  
 
 **5. FeatureSetTA.R**
   - 주가의 9개의 기술적 분석지표값으로 구성된 train/test data set 생성
@@ -78,9 +78,9 @@
   - w
   - w
   
-**20. svm.R**
-  - w
-  - w
+**20. svm.R / svm-1.R**
+  - SVM(Support Vector Machine) 알고리즘 : https://ko.wikipedia.org/wiki/서포트_벡터_머신
+  - 주가의 기술적분석 지표 데이터를 SVM알고리즘을 사용하여 내일 주가의 상승/하락을 예측(RBF Kernel function 사용) 
   
 **21. svmTA.R**
   - w
