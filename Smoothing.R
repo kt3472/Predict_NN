@@ -1,18 +1,18 @@
 library(quantmod)
-source('1.CollectData.R')
+source('CollectData.R')
 
 p <- getKospi(from='2015-01-01')
 
-# ÆòÈ°È­ (Smoothing), ´Ü¼ø ÀÌµ¿Æò±Õ (SMA)
+# í‰í™œí™” (Smoothing), ë‹¨ìˆœ ì´ë™í‰ê·  (SMA)
 p$sma <- SMA(p$close, n=30)
 
-# Kernel Regression ÆòÈ°È­
-# ksmooth ´Â list¸¦ ¹İÈ¯ÇÔ. --> µ¥ÀÌÅÍ ÇÁ·¹ÀÓÀ¸·Î º¯È¯
+# Kernel Regression í‰í™œí™”
+# ksmooth ëŠ” listë¥¼ ë°˜í™˜í•¨. --> ë°ì´í„° í”„ë ˆì„ìœ¼ë¡œ ë³€í™˜
 k <- as.data.frame(ksmooth(time(p), p$close, "normal", bandwidth=30))
 p$kernel <- as.xts(k$y, order.by=index(p))
 
-# Spline ÆòÈ°È­
-# splineÀº Á÷Á¢ µ¥ÀÌÅÍ ÇÁ·¹ÀÓÀ¸·Î º¯È¯ ¾ÈµÊ. $y ·Î y ¿ä¼Ò¸¸ º¯È¯ÇÔ
+# Spline í‰í™œí™”
+# splineì€ ì§ì ‘ ë°ì´í„° í”„ë ˆì„ìœ¼ë¡œ ë³€í™˜ ì•ˆë¨. $y ë¡œ y ìš”ì†Œë§Œ ë³€í™˜í•¨
 k <- as.data.frame(smooth.spline(time(p), p$close, spar=1)$y)
 p$spline <- as.xts(k, order.by=index(p))
 
