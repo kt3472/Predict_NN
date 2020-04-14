@@ -1,67 +1,67 @@
-source('1.CollectData.R')
+source('CollectData.R')
 
 FeatureSetTA <- function(p, tRate=0.1, cat=2) {
    
-   # ÀÏÀÏ ¼öÀÍ·üÀ» °è»êÇÑ´Ù
+   # ì¼ì¼ ìˆ˜ìµë¥ ì„ ê³„ì‚°í•œë‹¤
    p$rtn <-ROC(Cl(p))
    
-   # Á¾°¡ ±âÁØ Spread = 10ÀÏ ÀÌµ¿Æò±Õ - 20ÀÏ ÀÌµ¿Æò±Õ °è»ê
-   # scale() ÇÔ¼ö·Î Z-score NormalizationÀ» Àû¿ëÇÔ
+   # ì¢…ê°€ ê¸°ì¤€ Spread = 10ì¼ ì´ë™í‰ê·  - 20ì¼ ì´ë™í‰ê·  ê³„ì‚°
+   # scale() í•¨ìˆ˜ë¡œ Z-score Normalizationì„ ì ìš©í•¨
    ds <- scale(runMean(Cl(p), n=10) - runMean(Cl(p), n=20))
    colnames(ds) <- c("spread")
    
-   # ATR º¯µ¿¼º ÁöÇ¥ °è»ê
+   # ATR ë³€ë™ì„± ì§€í‘œ ê³„ì‚°
    ds$atr <- scale(ATR(scale(HLC(p)), n = 14)[,"atr"])
    
-   # SMI ÁöÇ¥ °è»ê
+   # SMI ì§€í‘œ ê³„ì‚°
    ds$smi <- scale(SMI(HLC(p), n = 13)[,"SMI"])
    
-   # ADX ÁöÇ¥ °è»ê
+   # ADX ì§€í‘œ ê³„ì‚°
    ds$adx <- scale(ADX(HLC(p), n = 14)[,"ADX"])
    
-   # Aroon Ãß¼¼ ÁöÇ¥ °è»ê
+   # Aroon ì¶”ì„¸ ì§€í‘œ ê³„ì‚°
    ds$aroon <- scale(aroon(p[, c("high", "low")], n = 20)$oscillator)
    
-   # Bollinger Band ÁöÇ¥ °è»ê
+   # Bollinger Band ì§€í‘œ ê³„ì‚°
    ds$boll <- scale(BBands(HLC(p), n = 20)[, "pctB"])
    
-   # MACD ÁöÇ¥ °è»ê
+   # MACD ì§€í‘œ ê³„ì‚°
    ds$macd <- scale(MACD(Cl(p))[, 2])
 
-   # OBV ÁöÇ¥ °è»ê
+   # OBV ì§€í‘œ ê³„ì‚°
    ds$obv <- scale(OBV(Cl(p), Vo(p)))
    
-   # 5ÀÏ ÀÌµ¿ Æò±Õ ¼öÀÍ·ü °è»ê
+   # 5ì¼ ì´ë™ í‰ê·  ìˆ˜ìµë¥  ê³„ì‚°
    ds$martn <- scale(runMean(p$rtn, n = 5))
    
-   # ÀÍÀÏ ¼öÀÍ·üÀ» Ç¥½ÃÇÑ´Ù. ³»ÀÏÀÇ ¼öÀÍ·üÀ» ¿¹ÃøÇÏ±â À§ÇÔ.
+   # ìµì¼ ìˆ˜ìµë¥ ì„ í‘œì‹œí•œë‹¤. ë‚´ì¼ì˜ ìˆ˜ìµë¥ ì„ ì˜ˆì¸¡í•˜ê¸° ìœ„í•¨.
    ds$frtn <- lag(p$rtn, -1)
 
-   # Prediction ¿ë µ¥ÀÌÅÍ
+   # Prediction ìš© ë°ì´í„°
    pred <- as.data.frame(ds[nrow(ds)])
    pred$frtn <- NULL
    
-   # Data Set¿¡¼­ Prediction ¿ë µ¥ÀÌÅÍ Á¦°Å
+   # Data Setì—ì„œ Prediction ìš© ë°ì´í„° ì œê±°
    ds <- ds[-nrow(ds)]
    
-   # NA Á¦°Å
+   # NA ì œê±°
    ds <- na.omit(ds)
    
-   # Data Set¿¡¼­ frtnÀ» ±âÁØÀ¸·Î Class¸¦ ºÎ¿©ÇÔ
-   # s = frtnÀÇ Ç¥ÁØÆíÂ÷.
+   # Data Setì—ì„œ frtnì„ ê¸°ì¤€ìœ¼ë¡œ Classë¥¼ ë¶€ì—¬í•¨
+   # s = frtnì˜ í‘œì¤€í¸ì°¨.
    if (cat == 3) {
-      # »ó½Â, ÇÏ¶ô, º¸ÇÕ 3 °¡Áö °æ¿ì·Î ¼³Á¤ÇÔ
-      # frtnÀÌ -0.2s ÀÌ¸é ÇÏ¶ô, -0.2s ~ +0.2s ÀÌ¸é º¸ÇÕ, +0.2s ÀÌ»óÀÌ¸é »ó½Â
+      # ìƒìŠ¹, í•˜ë½, ë³´í•© 3 ê°€ì§€ ê²½ìš°ë¡œ ì„¤ì •í•¨
+      # frtnì´ -0.2s ì´ë©´ í•˜ë½, -0.2s ~ +0.2s ì´ë©´ ë³´í•©, +0.2s ì´ìƒì´ë©´ ìƒìŠ¹
       s <- sd(ds$frtn)
       ds$class <- ifelse(ds$frtn < -0.2 * s, 1, ifelse(ds$frtn > 0.2 * s, 3, 2))
    } else {
-      # »ó½Â, ÇÏ¶ô 2 °¡Áö °æ¿ì·Î ¼³Á¤ÇÔ
-      # frtnÀÌ À½¼öÀÌ¸é ÇÏ¶ô, ¾ç¼öÀÌ¸é »ó½Â
+      # ìƒìŠ¹, í•˜ë½ 2 ê°€ì§€ ê²½ìš°ë¡œ ì„¤ì •í•¨
+      # frtnì´ ìŒìˆ˜ì´ë©´ í•˜ë½, ì–‘ìˆ˜ì´ë©´ ìƒìŠ¹
       ds$class <- ifelse(ds$frtn < 0, 1, 2)
    }
    ds$frtn <- NULL
    
-   # test data set °³¼ö
+   # test data set ê°œìˆ˜
    n <- as.integer(nrow(ds) * tRate)
 
    # training data set
