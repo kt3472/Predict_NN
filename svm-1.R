@@ -1,10 +1,12 @@
-library(e1071)
-source('3-2.FeatureSetTA.R')
+# install.packages("e1071")
 
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+library(e1071)
+source('FeatureSetTA.R')
+
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData('005930')
 
-# ±â¼úÀû ºĞ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ı¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTA(p)
 trainData <- as.data.frame(ds$train)
 testData <- as.data.frame(ds$test)
@@ -15,22 +17,23 @@ levels(trainData$class) <- c("Down", "Up")
 testData$class <- as.factor(testData$class)
 levels(testData$class) <- c("Down", "Up")
 
-# SVM À» »ı¼ºÇÑ´Ù
+# SVM ì„ ìƒì„±í•œë‹¤
 sv <- svm(class ~ ., data = trainData, kernel="radial", cost=1, gamma=0.1)
 
-# Å×½ºÆ® µ¥ÀÌÅÍ ¼¼Æ®¸¦ ÀÌ¿ëÇÏ¿© ¼º´ÉÀ» È®ÀÎÇÑ´Ù
+# í…ŒìŠ¤íŠ¸ ë°ì´í„° ì„¸íŠ¸ë¥¼ ì´ìš©í•˜ì—¬ ì„±ëŠ¥ì„ í™•ì¸í•œë‹¤
 pred <- predict(sv, testData, type = "class")
 cm <- table(pred, testData$class, dnn=list('predicted', 'actual'))
 print(cm)
 accuracy <- sum(diag(cm)) / sum(cm)
 print(accuracy)
 
-# ¿¹Ãø¿ë µ¥ÀÌÅÍ¸¦ ÀÌ¿ëÇÏ¿© ³»ÀÏ ÁÖ°¡ÀÇ ¹æÇâÀ» ¿¹ÃøÇØ º»´Ù.
+# ì˜ˆì¸¡ìš© ë°ì´í„°ë¥¼ ì´ìš©í•˜ì—¬ ë‚´ì¼ ì£¼ê°€ì˜ ë°©í–¥ì„ ì˜ˆì¸¡í•´ ë³¸ë‹¤.
 pred <- predict(sv, ds$pred, type = "class")
 print(pred)
 
-# Cross Validation ¿ÀÂ÷°¡ ÃÖ¼Ò°¡ µÇµµ·Ï C¿Í Gamma¸¦ Á¶Á¤ÇÔ
+# Cross Validation ì˜¤ì°¨ê°€ ìµœì†Œê°€ ë˜ë„ë¡ Cì™€ Gammaë¥¼ ì¡°ì •í•¨
 myGamma <- c(0.1, 0.5, 1)
 myCost <- c(1, 50, 100)
 tuned <- tune(svm, class ~ ., data=trainData, kernel="radial", ranges=list(gamma=myGamma, cost=myCost))
 
+summary(tuned)
