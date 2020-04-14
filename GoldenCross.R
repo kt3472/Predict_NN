@@ -1,19 +1,19 @@
 library(quantmod)
-source('1.CollectData.R')
+source('CollectData.R')
 
-# »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ (OHLC)¸¦ °¡Á®¿Â ÈÄ, Á¾°¡¸¸ ÀúÀåÇÑ´Ù
-# °Å·¡·®ÀÌ 0 ÀÎ °æ¿ì´Â Á¦¿ÜÇÑ´Ù (°ø, ÈÞÀÏ)
+# ì‚¼ì„±ì „ìž ì£¼ê°€ ë°ì´í„° (OHLC)ë¥¼ ê°€ì ¸ì˜¨ í›„, ì¢…ê°€ë§Œ ì €ìž¥í•œë‹¤
+# ê±°ëž˜ëŸ‰ì´ 0 ì¸ ê²½ìš°ëŠ” ì œì™¸í•œë‹¤ (ê³µ, íœ´ì¼)
 # samsung <- getSymbols('005930.KS', auto.assign=FALSE)
 # samsung <- samsung[Vo(samsung) > 0]
 # colnames(samsung) <- c('open', 'high', 'log', 'close', 'volume', 'adjusted')
 # goldenCross(samsung['2014'], 5, 20)
 
-# ÃÖÀûÈ­
+# ìµœì í™”
 optimize <- function(x, sfrom, sto, lfrom, lto) {
 	r <- data.frame()
 	t <- 1
 	
-	# for ¹®À¸·Î ÀÛ¼ºÇÔ. ´ÙÀ½ ¹öÀü¿¡¼­´Â foreach() ¿Í doParallel()·Î º´·Ä Ã³¸®ÇØ º¼ °Í.
+	# for ë¬¸ìœ¼ë¡œ ìž‘ì„±í•¨. ë‹¤ìŒ ë²„ì „ì—ì„œëŠ” foreach() ì™€ doParallel()ë¡œ ë³‘ë ¬ ì²˜ë¦¬í•´ ë³¼ ê²ƒ.
 	ptime <- system.time(
       for(i in sfrom:sto) {
          longStart <- i + lfrom
@@ -22,8 +22,8 @@ optimize <- function(x, sfrom, sto, lfrom, lto) {
             ret <- goldenCross(x, i, j, chart=F)
             stdev <- sd(ret)
             
-            r[t, 1] <- i; 	# ´Ü±â ÀÌµ¿Æò±Õ ±â°£
-            r[t, 2] <- j; 	# Àå±â ÀÌµ¿Æò±Õ ±â°£
+            r[t, 1] <- i; 	# ë‹¨ê¸° ì´ë™í‰ê·  ê¸°ê°„
+            r[t, 2] <- j; 	# ìž¥ê¸° ì´ë™í‰ê·  ê¸°ê°„
             r[t, 3] <- as.numeric(last(cumsum(ret)))
             r[t, 4] <- stdev
             r[t, 5] <- as.numeric(last(cumsum(ret))) / stdev
@@ -34,13 +34,13 @@ optimize <- function(x, sfrom, sto, lfrom, lto) {
 	print(ptime)
 	retVal <- data.frame()
 	
-	# ¸¶Áö¸· ¼öÀÍ·üÀÌ ÃÖ´ëÀÎ ¶óÀÎ ¸®ÅÏ
+	# ë§ˆì§€ë§‰ ìˆ˜ìµë¥ ì´ ìµœëŒ€ì¸ ë¼ì¸ ë¦¬í„´
 	retVal <- r[which.max(r[,3]),]
 	
-	# ÆíÂ÷°¡ ÃÖ¼ÒÀÎ ¶óÀÎ¸¸ ¸®ÅÏ
+	# íŽ¸ì°¨ê°€ ìµœì†Œì¸ ë¼ì¸ë§Œ ë¦¬í„´
 	retVal[2,] <- r[which.min(r[,4]),]
 	
-	# Sharp ratio°¡ ÃÖ´ëÀÎ ¶óÀÎ¸¸ ¸®ÅÏ
+	# Sharp ratioê°€ ìµœëŒ€ì¸ ë¼ì¸ë§Œ ë¦¬í„´
 	retVal[3,] <- r[which.max(r[,5]),]
 	
 	retVal[1, 6] <- 'Max return'
@@ -53,29 +53,29 @@ optimize <- function(x, sfrom, sto, lfrom, lto) {
 	optimize <- r
 }
 
-# Golden cross, Dead cross Àü·« Back Test
+# Golden cross, Dead cross ì „ëžµ Back Test
 goldenCross <- function(x, shortMA, longMA, chart) {
-	# ´Ü±â ÀÌµ¿Æò±Õ¼±°ú Àå±â ÀÌµ¿Æò±Õ¼±À» ±¸ÇÑ´Ù. NA¸¦ Á¦°ÅÇÑ´Ù
+	# ë‹¨ê¸° ì´ë™í‰ê· ì„ ê³¼ ìž¥ê¸° ì´ë™í‰ê· ì„ ì„ êµ¬í•œë‹¤. NAë¥¼ ì œê±°í•œë‹¤
 	x$maShort <- SMA(Cl(x), shortMA)
 	x$maLong <- SMA(Cl(x), longMA)
 	x <- na.omit(x)
 
-	# ¼öÀÍ·üÀ» ±¸ÇØ ³õ´Â´Ù
-	# ret <- dailyReturn(s$close) ´Â open ~ close °¡°ÝÀ¸·Î ¼öÀÍ·ü »êÃâ
-	# ret <- ROC(s$close) ´Â ÀüÀÏ close¿Í ±ÝÀÏ close·Î ¼öÀÍ·ü »êÃâ (·Î±× ¼öÀÍ·ü)
+	# ìˆ˜ìµë¥ ì„ êµ¬í•´ ë†“ëŠ”ë‹¤
+	# ret <- dailyReturn(s$close) ëŠ” open ~ close ê°€ê²©ìœ¼ë¡œ ìˆ˜ìµë¥  ì‚°ì¶œ
+	# ret <- ROC(s$close) ëŠ” ì „ì¼ closeì™€ ê¸ˆì¼ closeë¡œ ìˆ˜ìµë¥  ì‚°ì¶œ (ë¡œê·¸ ìˆ˜ìµë¥ )
 	x$return <- ROC(x$close)
 	x <- na.omit(x)
 
-	# Àü·«À» ¼ö¸³ÇÑ´Ù
-	# ´Ü±âÀÌÆò¼±ÀÌ Àå±âÀÌÆò¼± À§¿¡ ÀÖÀ¸¸é Long position, ¾Æ´Ï¸é Short position À¯Áö
+	# ì „ëžµì„ ìˆ˜ë¦½í•œë‹¤
+	# ë‹¨ê¸°ì´í‰ì„ ì´ ìž¥ê¸°ì´í‰ì„  ìœ„ì— ìžˆìœ¼ë©´ Long position, ì•„ë‹ˆë©´ Short position ìœ ì§€
 	x$position <- ifelse(x$maShort > x$maLong, 1, -1)
 	
-	# Àü·« ¼öÇà½Ã ¼öÀÍ·üÀ» °è»êÇÑ´Ù
+	# ì „ëžµ ìˆ˜í–‰ì‹œ ìˆ˜ìµë¥ ì„ ê³„ì‚°í•œë‹¤
 	x$myret <- lag(x$position) * x$return
 	x <- na.omit(x)
 
 	if (chart == TRUE) {
-		# Àü·« ¼öÇà °á°ú¸¦ È®ÀÎÇÑ´Ù
+		# ì „ëžµ ìˆ˜í–‰ ê²°ê³¼ë¥¼ í™•ì¸í•œë‹¤
 	  par(mfrow = c(2,1), mar=c(2, 2, 2, 2), mgp=c(3, 0.3, 0))
 	  plot(as.vector(x$close), type = 'l', main = 'Price & MAs', 
 	       ylab='', xlab='', cex.main=1, cex.axis=0.8, xaxt="n", yaxt="n")
@@ -93,6 +93,6 @@ goldenCross <- function(x, shortMA, longMA, chart) {
 		lines(cumsum(x$myret), col = 'red')
 	}
 
-	# ½ÇÇö ¼öÀÍ·üÀ» ¸®ÅÏÇÑ´Ù
+	# ì‹¤í˜„ ìˆ˜ìµë¥ ì„ ë¦¬í„´í•œë‹¤
 	goldenCross <- x$myret
 }
