@@ -6,7 +6,7 @@ source('CollectData.R')
 # samsung <- getSymbols('005930.KS', auto.assign=FALSE)
 # samsung <- samsung[Vo(samsung) > 0]
 # colnames(samsung) <- c('open', 'high', 'log', 'close', 'volume', 'adjusted')
-# goldenCross(samsung['2014'], 5, 20)
+# goldenCross(samsung['2018::'], 5, 20)
 
 # 최적화
 optimize <- function(x, sfrom, sto, lfrom, lto) {
