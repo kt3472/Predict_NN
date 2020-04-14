@@ -6,8 +6,9 @@
   - w
 
 **2. CollectData.R**
-  - w
-  - w
+  - 주가 데이터 수집 Source (from 구글, 야후)
+  - getData function : 한종목의 주가데이터를 가져옴
+  - getKospi function : 코스피지수 주가데이터를 가져옴
   
 **3. Collect_stock_data.R**
   - w
