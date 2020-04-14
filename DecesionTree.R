@@ -1,42 +1,45 @@
+# install.packages('rpart')
+# install.packages('rpart.plot')
+
 library(rpart)
 library(rpart.plot)
-source('3-2.FeatureSetTA.R')
+source('FeatureSetTA.R')
 
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 #p <- getData('005930')
 
-# ±â¼úÀû ºĞ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ı¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTA(p)
 ds$train$class <- ifelse(ds$train$class == 1, "Down", "Up")
 ds$test$class <- ifelse(ds$test$class == 1, "Down", "Up")
 
-# Decision Tree¸¦ »ı¼ºÇÑ´Ù. Ã³À½¿¡´Â º¹Àâµµ (cp)¸¦ ÀÛ°Ô ¼³Á¤ÇÏ¿© Tree¸¦ Å©°Ô ¸¸µç´Ù.
+# Decision Treeë¥¼ ìƒì„±í•œë‹¤. ì²˜ìŒì—ëŠ” ë³µì¡ë„ (cp)ë¥¼ ì‘ê²Œ ì„¤ì •í•˜ì—¬ Treeë¥¼ í¬ê²Œ ë§Œë“ ë‹¤.
 #dt <- rpart(class ~ spread + atr + smi + adx + aroon + boll + macd + obv + martn, data = ds$train, cp=0.001)
 dt <- rpart(class ~ atr + smi + boll + obv + martn, data = ds$train, cp=0.001)
 
-# Tree¸¦ ±×·Áº»´Ù.
+# Treeë¥¼ ê·¸ë ¤ë³¸ë‹¤.
 prp(dt, type = 2, extra = 8)
 
-# Cross validation ¿ÀÂ÷°¡ ÃÖ¼Ò°¡ µÇ´Â ÁöÁ¡ÀÇ º¹Àâµµ (cp)¸¦ Ã£´Â´Ù.
-# rpart ÆĞÅ°Áö´Â ÀÚÃ¼·Î CV ±â´ÉÀ» °¡Áö°í ÀÖÀ¸¸ç, default·Î 10-fold CV¸¦ ¼öÇàÇÑ´Ù.
-# k-foldÀÇ °ªÀº rpart.control(xval = 10) ¿¡ default·Î ¼³Á¤µÇ¾î ÀÖÀ½.
+# Cross validation ì˜¤ì°¨ê°€ ìµœì†Œê°€ ë˜ëŠ” ì§€ì ì˜ ë³µì¡ë„ (cp)ë¥¼ ì°¾ëŠ”ë‹¤.
+# rpart íŒ¨í‚¤ì§€ëŠ” ìì²´ë¡œ CV ê¸°ëŠ¥ì„ ê°€ì§€ê³  ìˆìœ¼ë©°, defaultë¡œ 10-fold CVë¥¼ ìˆ˜í–‰í•œë‹¤.
+# k-foldì˜ ê°’ì€ rpart.control(xval = 10) ì— defaultë¡œ ì„¤ì •ë˜ì–´ ìˆìŒ.
 printcp(dt)
 plotcp(dt, upper = "splits", col = "red")
 
-# CV ¿ÀÂ÷°¡ ÃÖ¼Ò°¡ µÇ´Â cp¸¦ ¼±ÅÃÇÏ¿© °¡ÁöÄ¡±â (Pruning) ÇÑ´Ù.
+# CV ì˜¤ì°¨ê°€ ìµœì†Œê°€ ë˜ëŠ” cpë¥¼ ì„ íƒí•˜ì—¬ ê°€ì§€ì¹˜ê¸° (Pruning) í•œë‹¤.
 pdt <- prune(dt, cp = 0.0074697)
 
-# Pruning µÈ Tree¸¦ ±×·Á º»´Ù.
+# Pruning ëœ Treeë¥¼ ê·¸ë ¤ ë³¸ë‹¤.
 prp(pdt, type = 2, extra = 8)
 
-# Å×½ºÆ® µ¥ÀÌÅÍ ¼¼Æ®¸¦ ÀÌ¿ëÇÏ¿© ¼º´ÉÀ» È®ÀÎÇÑ´Ù
+# í…ŒìŠ¤íŠ¸ ë°ì´í„° ì„¸íŠ¸ë¥¼ ì´ìš©í•˜ì—¬ ì„±ëŠ¥ì„ í™•ì¸í•œë‹¤
 pred <- predict(pdt, ds$test, type = "class")
 cm <- table(pred, ds$test$class, dnn=list('predicted', 'actual'))
 print(cm)
 accuracy <- sum(diag(cm)) / sum(cm)
 print(accuracy)
 
-# ¿¹Ãø¿ë µ¥ÀÌÅÍ¸¦ ÀÌ¿ëÇÏ¿© ³»ÀÏ ÁÖ°¡ÀÇ ¹æÇâÀ» ¿¹ÃøÇØ º»´Ù.
+# ì˜ˆì¸¡ìš© ë°ì´í„°ë¥¼ ì´ìš©í•˜ì—¬ ë‚´ì¼ ì£¼ê°€ì˜ ë°©í–¥ì„ ì˜ˆì¸¡í•´ ë³¸ë‹¤.
 pred <- predict(pdt, ds$pred, type = "prob")
 print(pred)
 
