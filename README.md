@@ -9,11 +9,8 @@
   - 주가 데이터 수집 Source (from 구글, 야후)
   - getData function : 한종목의 주가데이터를 가져옴
   - getKospi function : 코스피지수 주가데이터를 가져옴
-  
-**3. Collect_stock_data.R**
-  - w
-  - w
-  
+
+
 **4. DecesionTree.R**
   - w
   - w
@@ -27,8 +24,7 @@
   - w
 
 **7. GoldenCross.R**
-  - w
-  - w
+  - 기술적분석의 이동평균선 골든크로스/데드크로스 지표를 이용한 Back testing  
   
 **8. HClust(Pattern).R**
   - w
