@@ -63,16 +63,16 @@
   - w
   
 **16. baggingSVM.R**
-  - w
-  - w
+  - 훈련데이터를 여러개로 나눈 후 각각에 대해 SVM모형을 적용한 후 결과를 좋합하여 예측
+  - bagging : https://dbrang.tistory.com/1394
   
 **17. boostingDT.R**
   - w
   - w
   
 **18. hybrid(knn).R**
-  - w
-  - w
+  - 주가패턴(20일)과 캔들패턴을 분류한후 train data set에 추가한후 k-NN알고리즘으로 주가의 방향을 예측
+  - 비지도학습으로 분류 -> 지도학습을 위한 데이터 Feature로 활용 
   
 **19. stock_price_simulation.R**
   - w
