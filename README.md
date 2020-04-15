@@ -45,19 +45,19 @@
   - Random Forest알고리즘 : https://ko.wikipedia.org/wiki/랜덤_포레스트
   - 훈련데이터를 여러 개로 나눈 후 각각에 대해 Decision Tree를 구축하고, 결과를 종합하여 예측
   
-**16. baggingSVM.R**
+**12. baggingSVM.R**
   - 훈련데이터를 여러개로 나눈 후 각각에 대해 SVM모형을 적용한 후 결과를 좋합하여 예측
   - bagging : https://dbrang.tistory.com/1394
   
-**17. boostingDT.R**
+**13. boostingDT.R**
   - 훈련데이터를 부스팅방식으로 여러개로 나눈 후 각각에 대해 Decision Tree를 구축하고, 결과를 종합하여 예측
   - AdaBoost 알고리즘 이용 : https://ko.wikipedia.org/wiki/에이다부스트
   
-**18. FeatureSetTAP.R / hybrid(knn).R**
+**14. FeatureSetTAP.R / hybrid(knn).R**
   - 주가패턴(20일)과 캔들패턴을 분류한후 train data set에 추가한후 k-NN알고리즘으로 주가의 방향을 예측
   - 비지도학습으로 분류 -> 지도학습을 위한 데이터 Feature로 활용 
   
-**20. svm.R / svm-1.R**
+**15. svm.R / svm-1.R**
   - SVM(Support Vector Machine) 알고리즘 : https://ko.wikipedia.org/wiki/서포트_벡터_머신
   - 주가의 기술적분석 지표 데이터를 SVM알고리즘을 사용하여 내일 주가의 상승/하락을 예측(RBF Kernel function 사용) 
   
