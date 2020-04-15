@@ -1,14 +1,17 @@
+# install.packages("adabag")
+# install.packages("rpart")
+
 library(adabag)
 library(rpart)
-source('3-2.FeatureSetTA.R')
+source('FeatureSetTA.R')
 
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData('005930')
 
-# ±â¼úÀû ºĞ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ı¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTA(p)
 
-# class¸¦ factor ÇüÀ¸·Î º¯È¯ÇÑ´Ù
+# classë¥¼ factor í˜•ìœ¼ë¡œ ë³€í™˜í•œë‹¤
 ds$train$class <- as.factor(ds$train$class)
 levels(ds$train$class) <- c("Dwon", "Up")
 ds$test$class <- as.factor(ds$test$class)
@@ -19,13 +22,13 @@ control = rpart.control(cp = 0.007)
 ada <- boosting(class~., data = ds$train, mfinal=100, boos=TRUE, coeflearn='Breiman', control)
 #errorevol(ada, ds$train)
 
-# Å×½ºÆ® µ¥ÀÌÅÍ ¼¼Æ®¸¦ ÀÌ¿ëÇÏ¿© ¼º´ÉÀ» È®ÀÎÇÑ´Ù
+# í…ŒìŠ¤íŠ¸ ë°ì´í„° ì„¸íŠ¸ë¥¼ ì´ìš©í•˜ì—¬ ì„±ëŠ¥ì„ í™•ì¸í•œë‹¤
 cm <- predict(ada, ds$test)$confusion
 print(cm)
 accuracy <- sum(diag(cm)) / sum(cm)
-printf("\n* Á¤È®µµ = %.4f\n", accuracy)
+printf("\n* ì •í™•ë„ = %.4f\n", accuracy)
 
-# ºĞ·ù±âÁØÀ¸·Î ¸¹ÀÌ »ç¿ëµÈ ±â¼úÀû ºĞ¼® ÁöÇ¥¸¦ È®ÀÎÇÑ´Ù.
+# ë¶„ë¥˜ê¸°ì¤€ìœ¼ë¡œ ë§ì´ ì‚¬ìš©ëœ ê¸°ìˆ ì  ë¶„ì„ ì§€í‘œë¥¼ í™•ì¸í•œë‹¤.
 imp <- sort(ada$importance, decreasing=TRUE)
 print(imp)
 barplot(imp, col='green', xlab=colnames(imp))
