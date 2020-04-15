@@ -32,16 +32,16 @@
   - 단기/장기 이동평균 기간을 달리하여 Back testing 후 최적 이동평균 기간을 찾음
   
 **8. HClust(Pattern).R**
-  - w
-  - w
-  
+  - Hierarchical-Clustering 알고리즘 : https://ratsgo.github.io/machine%20learning/2017/04/18/HC/
+  - 20일 주가추이를 H-clustering 알고리즘으로 8개의 패턴으로 분류 
+    
 **9. HiddenMarkovModel_example.R**
   - w
   - w
   
 **10. K-Means(Pattern).R**
-  - w
-  - w
+  - K-mean 클러스터링 알고리즘 : https://ko.wikipedia.org/wiki/K-평균_알고리즘
+  - 20일 주가추이를 K-means알고리즘으로 8개의 패턴으로 분류 
   
 **11. NeuralNet_filedata.R**
   - w
