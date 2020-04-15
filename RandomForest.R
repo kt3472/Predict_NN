@@ -1,38 +1,40 @@
+# install.packages("randomForest")
+
 require(randomForest)
-source('3-2.FeatureSetTA.R')
+source('FeatureSetTA.R')
 printf <- function(...) cat(sprintf(...))
 
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀÐ¾î¿Â´Ù
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ìž ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData('005930')
 
-# ±â¼úÀû ºÐ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ý¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTA(p)
 
-# class¸¦ factor ÇüÀ¸·Î º¯È¯ÇÑ´Ù
+# classë¥¼ factor í˜•ìœ¼ë¡œ ë³€í™˜í•œë‹¤
 ds$train$class <- as.factor(ds$train$class)
 levels(ds$train$class) <- c("Down", "Up")
 ds$test$class <- as.factor(ds$test$class)
 levels(ds$test$class) <- c("Down", "Up")
 
-# ·£´ýÆ÷·¹½ºÆ®¸¦ ±¸ÃàÇÑ´Ù
+# ëžœë¤í¬ë ˆìŠ¤íŠ¸ë¥¼ êµ¬ì¶•í•œë‹¤
 rf <- randomForest(class ~ ., data = ds$train, ntree=50)
 
-# Error rateÀ» °üÂûÇÑ´Ù. (ÈÆ·Ã µ¥ÀÌÅÍ·Î ÃøÁ¤ÇÑ Error ÀÓ)
+# Error rateì„ ê´€ì°°í•œë‹¤. (í›ˆë ¨ ë°ì´í„°ë¡œ ì¸¡ì •í•œ Error ìž„)
 plot(rf, main="Error")
 err <- as.data.frame(rf$err.rate)
 print(head(err))
 err$mean <- apply(err, 1, mean)
 minErrTree <- which(err$mean == min(err$mean))[1]
-printf("* Error °¡ ÃÖ¼ÒÀÎ Æ®¸®ÀÇ °³¼ö = %d\n", minErrTree)
+printf("* Error ê°€ ìµœì†Œì¸ íŠ¸ë¦¬ì˜ ê°œìˆ˜ = %d\n", minErrTree)
 
-# Å×½ºÆ® µ¥ÀÌÅÍ ¼¼Æ®¸¦ ÀÌ¿ëÇÏ¿© ¼º´ÉÀ» È®ÀÎÇÑ´Ù
+# í…ŒìŠ¤íŠ¸ ë°ì´í„° ì„¸íŠ¸ë¥¼ ì´ìš©í•˜ì—¬ ì„±ëŠ¥ì„ í™•ì¸í•œë‹¤
 pr <- predict(rf, ds$test)
 cm <- table(pr, ds$test$class)
 print(cm)
 accuracy <- sum(diag(cm)) / sum(cm)
-printf("\n* Á¤È®µµ = %.4f\n", accuracy)
+printf("\n* ì •í™•ë„ = %.4f\n", accuracy)
 
-# ºÐ·ù±âÁØÀ¸·Î ¸¹ÀÌ »ç¿ëµÈ ±â¼úÀû ºÐ¼® ÁöÇ¥¸¦ È®ÀÎÇÑ´Ù.
+# ë¶„ë¥˜ê¸°ì¤€ìœ¼ë¡œ ë§Žì´ ì‚¬ìš©ëœ ê¸°ìˆ ì  ë¶„ì„ ì§€í‘œë¥¼ í™•ì¸í•œë‹¤.
 varImpPlot(rf, sort = TRUE, pch = 15, col='red', main="Importance")
 
 
