@@ -1,38 +1,38 @@
 library(class)
-source('5-6.FeatureSetTAP.R')
+source('FeatureSetTAP.R')
 
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData('005930')
 
-# ±â¼úÀû ºĞ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ı¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTAP(p)
 
-# ÈÆ·Ã¿ë µ¥ÀÌÅÍ, Å×½ºÆ®¿ë µ¥ÀÌÅÍ¸¦ »ı¼ºÇÑ´Ù
-train <- ds$train[, -12]        # Class Á¦¿Ü
-test <- ds$test[, -12]          # Class Á¦¿Ü
+# í›ˆë ¨ìš© ë°ì´í„°, í…ŒìŠ¤íŠ¸ìš© ë°ì´í„°ë¥¼ ìƒì„±í•œë‹¤
+train <- ds$train[, -12]        # Class ì œì™¸
+test <- ds$test[, -12]          # Class ì œì™¸
 class <- factor(as.vector(ds$train[, 12]))
 
-# KNN ºĞ·ù±â·Î train µ¥ÀÌÅÍ¸¦ ÇĞ½ÀÇÏ°í test µ¥ÀÌÀÇ class¸¦ ÃßÁ¤ÇÑ´Ù
-# k ´Â 200À¸·Î ¼³Á¤ÇÑ´Ù (ÀÓÀÇ·Î ¼³Á¤)
-# knn() ÇÔ¼ö´Â ³»ºÎ¿¡¼­ °Å¸®°¡ °°Àº ÁöÁ¡ (tied point)¿¡ ´ëÇÑ Ã³¸®¿¡ ·£Á¡ ¿ä¼Ò°¡ µé¾î°¡±â
-# ¶§¹®¿¡ tie°¡ Á¸ÀçÇÏ´Â °æ¿ì ½ÇÇàÇÒ ¶§¸¶´Ù °á°ú°¡ ´Ş¶óÁú ¼ö ÀÖÀ½.
-# µ¿ÀÏ °á°ú¸¦ ¾òÀ¸·Á¸é set.seed() ´ÙÀ½¿¡ knn()À» ¼öÇàÇÔ.
+# KNN ë¶„ë¥˜ê¸°ë¡œ train ë°ì´í„°ë¥¼ í•™ìŠµí•˜ê³  test ë°ì´ì˜ classë¥¼ ì¶”ì •í•œë‹¤
+# k ëŠ” 200ìœ¼ë¡œ ì„¤ì •í•œë‹¤ (ì„ì˜ë¡œ ì„¤ì •)
+# knn() í•¨ìˆ˜ëŠ” ë‚´ë¶€ì—ì„œ ê±°ë¦¬ê°€ ê°™ì€ ì§€ì  (tied point)ì— ëŒ€í•œ ì²˜ë¦¬ì— ëœì  ìš”ì†Œê°€ ë“¤ì–´ê°€ê¸°
+# ë•Œë¬¸ì— tieê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš° ì‹¤í–‰í•  ë•Œë§ˆë‹¤ ê²°ê³¼ê°€ ë‹¬ë¼ì§ˆ ìˆ˜ ìˆìŒ.
+# ë™ì¼ ê²°ê³¼ë¥¼ ì–»ìœ¼ë ¤ë©´ set.seed() ë‹¤ìŒì— knn()ì„ ìˆ˜í–‰í•¨.
 testClass <- knn(train, test, class, k=200)
 
-# test set¿¡ ÃßÁ¤µÈ class¸¦ Ç¥½ÃÇÑ´Ù
+# test setì— ì¶”ì •ëœ classë¥¼ í‘œì‹œí•œë‹¤
 ds$test$predict <- testClass
 
-# ÃßÁ¤ÀÌ Àß µÇ¾ú´ÂÁö À°¾ÈÀ¸·Î È®ÀÎÇÑ´Ù
+# ì¶”ì •ì´ ì˜ ë˜ì—ˆëŠ”ì§€ ìœ¡ì•ˆìœ¼ë¡œ í™•ì¸í•œë‹¤
 head(ds$test)
 tail(ds$test)
 
-# Á¤È®µµ¸¦ °è»êÇÑ´Ù
+# ì •í™•ë„ë¥¼ ê³„ì‚°í•œë‹¤
 cm <- table(ds$test$class, testClass)
 print(cm)
 accuracy <- sum(diag(cm)) / sum(cm)
 print(accuracy)
 
-# k °ªÀ» º¯È­½ÃÅ°¸é¼­ accuracy°¡ °¡Àå ³ôÀº k ¸¦ Ã£¾Æº»´Ù.
+# k ê°’ì„ ë³€í™”ì‹œí‚¤ë©´ì„œ accuracyê°€ ê°€ì¥ ë†’ì€ k ë¥¼ ì°¾ì•„ë³¸ë‹¤.
 nk = 300
 accuracy <- rep(0, nk)
 for (k in 1:nk) {
@@ -41,24 +41,24 @@ for (k in 1:nk) {
    accuracy[k] <- sum(diag(cm)) / sum(cm)
 }
 
-# accuracy°¡ °¡Àå ³ôÀº k °ªÀ» Ã£´Â´Ù. max°¡ ¿©·¯°³ ÀÖÀ» ¼ö ÀÖÀ½. Ã¹ ¹øÂ° °ÍÀ» »ç¿ëÇÔ.
-# Spline ÆòÈ°È­ °ªÀÌ °¡Àå ³ôÀº k¸¦ Ã£´Â´Ù
+# accuracyê°€ ê°€ì¥ ë†’ì€ k ê°’ì„ ì°¾ëŠ”ë‹¤. maxê°€ ì—¬ëŸ¬ê°œ ìˆì„ ìˆ˜ ìˆìŒ. ì²« ë²ˆì§¸ ê²ƒì„ ì‚¬ìš©í•¨.
+# Spline í‰í™œí™” ê°’ì´ ê°€ì¥ ë†’ì€ kë¥¼ ì°¾ëŠ”ë‹¤
 spline <- smooth.spline(1:nk, accuracy, spar=1)$y
 ko <- which(spline == max(spline))[1]
-printf("\n* ÃÖÀû k = %d\n", ko)
-printf("* Á¤È®µµ = %.2f\n", spline[ko])
+printf("\n* ìµœì  k = %d\n", ko)
+printf("* ì •í™•ë„ = %.2f\n", spline[ko])
 
-# accuracy¸¦ ±×·¡ÇÁ·Î ±×·Áº»´Ù
-plot(spline, type='l', col='blue', main="k º¯È­¿¡ µû¸¥ Á¤È®µµÀÇ º¯È­", xlab="k")
+# accuracyë¥¼ ê·¸ë˜í”„ë¡œ ê·¸ë ¤ë³¸ë‹¤
+plot(spline, type='l', col='blue', main="k ë³€í™”ì— ë”°ë¥¸ ì •í™•ë„ì˜ ë³€í™”", xlab="k")
 abline(v = ko, col='red')
 
-# prediction¿ë µ¥ÀÌÅÍ¸¦ ¿¹ÃøÇØ º»´Ù
+# predictionìš© ë°ì´í„°ë¥¼ ì˜ˆì¸¡í•´ ë³¸ë‹¤
 prediction <- knn(train, ds$pred, class, k=ko)
 
 if (prediction == 1) {
-   printf("\n* ³»ÀÏ ÁÖ°¡´Â ÇÏ¶ôÇÒ °ÍÀ¸·Î ¿¹»óµÊ. Á¤È®µµ = %.2f\n", accuracy[ko])
+   printf("\n* ë‚´ì¼ ì£¼ê°€ëŠ” í•˜ë½í•  ê²ƒìœ¼ë¡œ ì˜ˆìƒë¨. ì •í™•ë„ = %.2f\n", accuracy[ko])
 } else {
-   printf("\n* ³»ÀÏ ÁÖ°¡´Â »ó½ÂÇÒ °ÍÀ¸·Î ¿¹»óµÊ. Á¤È®µµ = %.2f\n", accuracy[ko])
+   printf("\n* ë‚´ì¼ ì£¼ê°€ëŠ” ìƒìŠ¹í•  ê²ƒìœ¼ë¡œ ì˜ˆìƒë¨. ì •í™•ë„ = %.2f\n", accuracy[ko])
 }
 
 
