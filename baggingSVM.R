@@ -1,11 +1,13 @@
+# install.packages("foreach")
+
 library(e1071)
 require(foreach)
-source('3-2.FeatureSetTA.R')
+source('FeatureSetTA.R')
 
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData('005930')
 
-# ±â¼úÀû ºĞ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ı¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTA(p)
 trainData <- as.data.frame(ds$train)
 testData <- as.data.frame(ds$test)
@@ -16,8 +18,8 @@ levels(trainData$class) <- c("Down", "Up")
 testData$class <- as.factor(testData$class)
 levels(testData$class) <- c("Down", "Up")
 
-# SVM¿¡ ´ëÇØ BaggingÀ» ¼öÇàÇÑ´Ù
-# ÈÆ·Ã µ¥ÀÌÅÍ ¼¼Æ®¸¦ 5°³·Î ³ª´©¾î 50¹ø ¹İº¹ ¼öÇàÇÔ
+# SVMì— ëŒ€í•´ Baggingì„ ìˆ˜í–‰í•œë‹¤
+# í›ˆë ¨ ë°ì´í„° ì„¸íŠ¸ë¥¼ 5ê°œë¡œ ë‚˜ëˆ„ì–´ 50ë²ˆ ë°˜ë³µ ìˆ˜í–‰í•¨
 div <- 5
 iterations <- 50
 
@@ -28,10 +30,10 @@ bagged <- foreach(m=1:iterations, .combine = cbind) %do% {
    predict(base, testData)
 }
 
-# Baggind °á°ú È®ÀÎ
+# Baggind ê²°ê³¼ í™•ì¸
 print(bagged[1:10, 1:10])
 
-# Test µ¥ÀÌÅÍ¸¦ »ç¿ëÇÏ¿© Á¤È®µµ¸¦ ÃøÁ¤ÇÑ´Ù
+# Test ë°ì´í„°ë¥¼ ì‚¬ìš©í•˜ì—¬ ì •í™•ë„ë¥¼ ì¸¡ì •í•œë‹¤
 meanPredict <- apply(bagged[, 1:iterations], 1, function(x) {
    s <- (sum(x) / iterations)
    round(s, 0)
@@ -41,6 +43,6 @@ svmPredict <- as.data.frame(cbind(testData$class, meanPredict), row.names=F)
 cm <- table(svmPredict, dnn=list('predicted', 'actual'))
 print(cm)
 accuracy <- sum(diag(cm)) / sum(cm)
-printf("\n* Á¤È®µµ = %.6f\n", accuracy)
+printf("\n* ì •í™•ë„ = %.6f\n", accuracy)
 
 
