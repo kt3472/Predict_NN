@@ -1,9 +1,9 @@
-source('3-2.FeatureSetTA.R')
+source('FeatureSetTA.R')
 
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
-#p <- getData('005930')
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° KBSTAR200 ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
+#p <- getData('148020')
 
-# ÆĞÅÏ µ¥ÀÌÅÍ ¼¼Æ®¸¦ ±¸¼ºÇÑ´Ù. 20ÀÏ°£ÀÇ Á¾°¡¸¦ ÇÑ ÆĞÅÏÀ¸·Î ±¸¼ºÇÑ´Ù.
+# íŒ¨í„´ ë°ì´í„° ì„¸íŠ¸ë¥¼ êµ¬ì„±í•œë‹¤. 20ì¼ê°„ì˜ ì¢…ê°€ë¥¼ í•œ íŒ¨í„´ìœ¼ë¡œ êµ¬ì„±í•œë‹¤.
 n <- seq(1, nrow(p) - 20, by=3)
 ds <- data.frame()
 date <- vector()
@@ -18,20 +18,20 @@ colnames(ds) <- as.character(1:20)
 rownames(ds) <- date
 tail(ds)
 
-# H-Cluster ·Î DendrogramÀ» ±×·Áº¸±â À§ÇØ ÀÏºÎ µ¥ÀÌÅÍ¸¸ clustering ÇÑ´Ù
+# H-Cluster ë¡œ Dendrogramì„ ê·¸ë ¤ë³´ê¸° ìœ„í•´ ì¼ë¶€ ë°ì´í„°ë§Œ clustering í•œë‹¤
 hcl <- hclust(dist(ds[1:50,]), method='average')
 plot(hcl)
 
-# H-Cluster ·Î ÆĞÅÏÀ» 8°³ÀÇ Å¬·¯½ºÅÍ·Î ºĞ·ùÇÑ´Ù.
+# H-Cluster ë¡œ íŒ¨í„´ì„ 8ê°œì˜ í´ëŸ¬ìŠ¤í„°ë¡œ ë¶„ë¥˜í•œë‹¤.
 k <- 8
 hcl <- hclust(dist(ds), method='average')
 cl <- cutree(hcl, k)
 
-# µ¥ÀÌÅÍ ¼¼Æ®¿¡ Á¾°¡¿Í Å¬·¯½ºÅÍ ¹øÈ£ (ÆĞÅÏ ¹øÈ£)¸¦ Ãß°¡ÇÑ´Ù
+# ë°ì´í„° ì„¸íŠ¸ì— ì¢…ê°€ì™€ í´ëŸ¬ìŠ¤í„° ë²ˆí˜¸ (íŒ¨í„´ ë²ˆí˜¸)ë¥¼ ì¶”ê°€í•œë‹¤
 ds$close <- close
 ds$class <- cl
 
-# 1¹ø ÆĞÅÏ ±×·ì ¸î °³¸¸ ±×·Áº»´Ù.
+# 1ë²ˆ íŒ¨í„´ ê·¸ë£¹ ëª‡ ê°œë§Œ ê·¸ë ¤ë³¸ë‹¤.
 par(mfrow=c(1,1), mar=c(2, 2, 2, 2), mgp=c(3, 0.3, 0))
 pat.1 <- ds[which(ds$class == 1),]
 plot(t(pat.1[1, 1:20]), type='o', pch=20)
@@ -39,12 +39,12 @@ for (i in seq(10, 50, by=10)) {
    lines(t(pat.1[i, 1:20]), type='o', pch=20, col=i)
 }
 
-# Á¾°¡ ±âÁØÀ¸·Î ÁÖ°¡ Â÷Æ®¸¦ ±×¸®°í, ±× À§¿¡ ÆĞÅÏ ¹øÈ£¸¦ Ç¥½ÃÇÑ´Ù
+# ì¢…ê°€ ê¸°ì¤€ìœ¼ë¡œ ì£¼ê°€ ì°¨íŠ¸ë¥¼ ê·¸ë¦¬ê³ , ê·¸ ìœ„ì— íŒ¨í„´ ë²ˆí˜¸ë¥¼ í‘œì‹œí•œë‹¤
 par(mfrow=c(1,1))
 myCol <- c("blue", "red", "black", "brown", "green", "purple", "pink", "green")
-plot(ds$close[721:821], type='b', pch=as.character(ds$class), col=myCol[ds$class], cex=1.2)
+plot(ds$close[581:681], type='b', pch=as.character(ds$class), col=myCol[ds$class], cex=1.2)
 
-# ÆĞÅÏÀÌ ¸î°³¾¿ ÀÖ´ÂÁö Bar chart¸¦ ±×·Áº»´Ù
-t <- table(ds$class[721:821])
+# íŒ¨í„´ì´ ëª‡ê°œì”© ìˆëŠ”ì§€ Bar chartë¥¼ ê·¸ë ¤ë³¸ë‹¤
+t <- table(ds$class[581:681])
 print(t)
 barplot(t, col='green')
