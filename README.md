@@ -47,8 +47,8 @@
   - w
   
 **13. RandomForest.R**
-  - w
-  - w
+  - Random Forest알고리즘 : https://ko.wikipedia.org/wiki/랜덤_포레스트
+  - 훈련데이터를 여러 개로 나눈 후 각각에 대해 Decision Tree를 구축하고, 결과를 종합하여 예측
   
 **14. Smoothing.R**
   - 시계열 데이터 평활화(단순이동평균, Kernel Regression, Spline)
