@@ -1,30 +1,30 @@
 library('bcp')
 library('quantmod')
-source("1.CollectData.R")
+source("CollectData.R")
 
-# »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+# ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 #p <- getData("005930")
 p <- getKospi()
 
-# Á¾°¡ÀÇ º¯È¯Á¡À» À°¾ÈÀ¸·Î È®ÀÎÇÏ±âÀ§ÇØ 2016³â ÀÌÈÄ µ¥ÀÌÅÍ¸¸ ºĞ¼®ÇØ º»´Ù
+# ì¢…ê°€ì˜ ë³€í™˜ì ì„ ìœ¡ì•ˆìœ¼ë¡œ í™•ì¸í•˜ê¸°ìœ„í•´ 2016ë…„ ì´í›„ ë°ì´í„°ë§Œ ë¶„ì„í•´ ë³¸ë‹¤
 bcp.close <- bcp(p$close['2016-01::'])
 plot(bcp.close)
 
-# ÀüÃ¼¸¦ ºĞ¼®ÇØ º»´Ù
+# ì „ì²´ë¥¼ ë¶„ì„í•´ ë³¸ë‹¤
 bcp.close <- bcp(p$close)
 plot(bcp.close)
 
-# posterior probability ¼öÄ¡ È®ÀÎ
+# posterior probability ìˆ˜ì¹˜ í™•ì¸
 p$posterior <- bcp.close$posterior.prob
 
-# ³¯Â¥ ¼ö °è»ê
+# ë‚ ì§œ ìˆ˜ ê³„ì‚°
 k <- 0.5
 p <- p[which(p$posterior > k),]
 p$days <- NA
 for (i in 2:nrow(p)) p$days[i] <- as.numeric(index(p[i]) - index(p[i-1]))
 p <- na.omit(p)
 
-# ³¯Â¥ÀÇ ÃÖºó°ª, Æò±Õ °è»ê
+# ë‚ ì§œì˜ ìµœë¹ˆê°’, í‰ê·  ê³„ì‚°
 myMode <- function(x) {
    ux <- unique(x)
    ux[which.max(tabulate(match(x, ux)))]
@@ -32,8 +32,8 @@ myMode <- function(x) {
 md <- myMode(p$days)
 mu <- mean(p$days)
 
-# ³¯Â¥ ¼öÀÇ ºĞÆ÷ È®ÀÎ
-title <- sprintf("Posterior > %.2f, ÃÖºó°ª = %d, Æò±Õ = %.4f", k, md, mu)
+# ë‚ ì§œ ìˆ˜ì˜ ë¶„í¬ í™•ì¸
+title <- sprintf("Posterior > %.2f, ìµœë¹ˆê°’ = %d, í‰ê·  = %.4f", k, md, mu)
 plot(density(p$days), main = title)
 abline(v=md, col='red')
 abline(v=mu, col='blue')
