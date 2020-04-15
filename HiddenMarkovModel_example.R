@@ -1,8 +1,8 @@
 library('depmixS4')
 library('quantmod')
-source("1.CollectData.R")
+source("CollectData.R")
 
-# »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+# ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData("005930")
 
 hmmInference <- function(p, n, chart=T) {
@@ -16,13 +16,13 @@ hmmInference <- function(p, n, chart=T) {
    summary(hmmfit)
    
    if (chart) {
-      # ÁÖ°¡ ¹× State º¯È­ Â÷Æ®
+      # ì£¼ê°€ ë° State ë³€í™” ì°¨íŠ¸
       prob <- posterior(hmmfit)
       #prob$mstate <- apply(prob[, -1], 1, function(x) which(x == max(x)))
       print(tail(prob))
       
       par(mfrow=c(3,1), mar=c(2, 2, 2, 2), mgp=c(2, 0.3, 0))
-      plot(Cl(p), type='s', main="ÁÖ°¡")
+      plot(Cl(p), type='s', main="ì£¼ê°€")
       plot(prob$state, type='s', main='True Regimes', xlab='', ylab='Regime')
       matplot(prob[,-1], type='l', main='Regime Posterior Probabilities', ylab='Probability')
       legend(x='topright', paste("S", 1:n, sep=''), fill=1:n, bty='n')
@@ -32,18 +32,18 @@ hmmInference <- function(p, n, chart=T) {
       p$state <- prob$state
       
       for (i in 1:n) {
-         # State i ¿¡ ¼ÓÇÑ ¼öÀÍ·ü
+         # State i ì— ì†í•œ ìˆ˜ìµë¥ 
          rtn <- p$rtn[which(p$state == i)]
 
          if (length(rtn) > 1) {
-            # State i ÀÇ ºñÀ²
+            # State i ì˜ ë¹„ìœ¨
             r <- 100 * length(rtn) / nrow(p)
             
-            # State i ¿¡ ¼ÓÇÑ ¼öÀÍ·üÀÇ Æò±Õ, Ç¥ÁØÆíÂ÷ (¿¬°£´ÜÀ§·Î È¯»êÇÔ)
+            # State i ì— ì†í•œ ìˆ˜ìµë¥ ì˜ í‰ê· , í‘œì¤€í¸ì°¨ (ì—°ê°„ë‹¨ìœ„ë¡œ í™˜ì‚°í•¨)
             m <- mean(rtn) * 252 * 100
             s <- sd(rtn) * sqrt(252) * 100
             
-            plot(density(rtn), xlim=c(-0.1, 0.1), main=sprintf("State #%d (¥ì=%.2f, ¥ò=%.2f, r=%.2f)", i, m, s, r))
+            plot(density(rtn), xlim=c(-0.1, 0.1), main=sprintf("State #%d (Î¼=%.2f, Ïƒ=%.2f, r=%.2f)", i, m, s, r))
             abline(v=m[1]/25200, col='red')
          }
       }
