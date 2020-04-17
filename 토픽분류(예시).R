@@ -1,33 +1,33 @@
 library(tm)
 library(topicmodels)
 library(KoNLP)
-source('10-4.MySubTm.R')
+source('MySubTm.R')
 printf <- function(...) cat(sprintf(...))
 
-# ¹®¼­ (LDAtest.csv)ÀÇ 
-# 1 ~ 100 ±îÁö´Â theta1 ÀÇ ÁÖÁ¦ ºÐÆ÷·Î »ý¼ºµÈ °ÍÀÌ°í
-# 101 ~ 200 ±îÁö´Â theta2 ÀÇ ÁÖÁ¦ ºÐÆ÷·Î »ý¼ºµÈ °ÍÀÓ.
+# ë¬¸ì„œ (LDAtest.csv)ì˜ 
+# 1 ~ 100 ê¹Œì§€ëŠ” theta1 ì˜ ì£¼ì œ ë¶„í¬ë¡œ ìƒì„±ëœ ê²ƒì´ê³ 
+# 101 ~ 200 ê¹Œì§€ëŠ” theta2 ì˜ ì£¼ì œ ë¶„í¬ë¡œ ìƒì„±ëœ ê²ƒìž„.
 #
-# theta1 <- c(0.05, 0.15, 0.60, 0.10, 0.10)   <-- 3¹ø ÅäÇÈ È®·üÀÌ ³ôÀ½
-# theta2 <- c(0.05, 0.05, 0.20, 0.10, 0.60)   <-- 5¹ø ÅäÇÈ È®·üÀÌ ³ôÀ½
+# theta1 <- c(0.05, 0.15, 0.60, 0.10, 0.10)   <-- 3ë²ˆ í† í”½ í™•ë¥ ì´ ë†’ìŒ
+# theta2 <- c(0.05, 0.05, 0.20, 0.10, 0.60)   <-- 5ë²ˆ í† í”½ í™•ë¥ ì´ ë†’ìŒ
 #
-# ÀÌ ¹®¼­¸¦ ÀÐ¾î¼­ 2 °³ ÅäÇÈÀ¸·Î ºÐ·ùÇÑ ÈÄ °á°ú°¡ Àß ¸Â´ÂÁö È®ÀÎÇÔ.
+# ì´ ë¬¸ì„œë¥¼ ì½ì–´ì„œ 2 ê°œ í† í”½ìœ¼ë¡œ ë¶„ë¥˜í•œ í›„ ê²°ê³¼ê°€ ìž˜ ë§žëŠ”ì§€ í™•ì¸í•¨.
 # ====================================================================
 docs <- read.csv("data/LDAtest.csv", header=T, stringsAsFactors=F)
 
-# ¹®¼­ Corpus »ý¼º
+# ë¬¸ì„œ Corpus ìƒì„±
 docs.corp <- Corpus(DataframeSource(docs))
 
-# Term document matrix & Document Term matrix »ý¼º
+# Term document matrix & Document Term matrix ìƒì„±
 splitWords <- function(x) { as.vector(strsplit(x$content, " ")[[1]]) }
 tdm <- TermDocumentMatrix(docs.corp, control=list(tokenize=splitWords, wordLengths=c(1,Inf)))
 dtm <- as.DocumentTermMatrix(tdm)
 
-# Latent Dirichlet Allocation. Topic ¼ö = 2°³
+# Latent Dirichlet Allocation. Topic ìˆ˜ = 2ê°œ
 k = 2
 lda <- LDA(dtm, k, method="Gibbs")
 
-# ÅäÇÈº° ´Ü¾î ºÐÆ÷
+# í† í”½ë³„ ë‹¨ì–´ ë¶„í¬
 beta <- list()
 for (i in 1:k) {
    t <- as.data.frame(posterior(lda)$term[i,])
@@ -45,16 +45,16 @@ for (i in 1:k) {
    printf("\n")
 }
 
-# ¹®¼­º° ÅäÇÈ ºÐÆ÷
+# ë¬¸ì„œë³„ í† í”½ ë¶„í¬
 theta <- as.data.frame(posterior(lda)$topic)
 
 colnames(theta) <- paste("Topic #", 1:k, sep="")
 rownames(theta) <- paste("Doc #", 1:200, sep="")
 
-# È®·üÀÌ °¡Àå ³ôÀº ÅäÇÈÀ» Ã£¾Æ¼­ Class·Î Ç¥½ÃÇÔ
+# í™•ë¥ ì´ ê°€ìž¥ ë†’ì€ í† í”½ì„ ì°¾ì•„ì„œ Classë¡œ í‘œì‹œí•¨
 FindClass <- function(x) { which(x == max(x))[1] }
 theta$class <- apply(theta, 1, FindClass)
-printf("\n*¹®¼­º° ÅäÇÈ ºÐÆ÷ [1:5]\n")
+printf("\n*ë¬¸ì„œë³„ í† í”½ ë¶„í¬ [1:5]\n")
 print(theta[1:5,])
 printf("\n")
 print(table(theta$class))
