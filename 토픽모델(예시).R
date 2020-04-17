@@ -1,51 +1,51 @@
 library(tm)
 library(SnowballC)
 library(topicmodels)
-source('10-4.MySubTm.R')
+source('MySubTm.R')
 
-# ¹®¼­
+# ë¬¸ì„œ
 docs <- c("I like to eat broccoli and bananas and He doesn't like banana.",
           "I ate a banana and spinach smoothie for breakfast. Banana is my favorite.",
           "Chinchillas and kitten are cute.",
           "My sister adopted a kitten yeterday.",
           "Look at this cute kitten munching on a piece of cake.")
 
-# ¹®¼­ Corpus »ı¼º
+# ë¬¸ì„œ Corpus ìƒì„±
 docs.corp <- Corpus(VectorSource(docs))
 
-# Corpus ³»¿ëÀÇ content È®ÀÎ
+# Corpus ë‚´ìš©ì˜ content í™•ì¸
 # as.data.frame(sapply(a, as.character))
 
-# Corpus ³»¿ëÀ» ¸ğµÎ ¼Ò¹®ÀÚ·Î º¯È¯ÇÔ
+# Corpus ë‚´ìš©ì„ ëª¨ë‘ ì†Œë¬¸ìë¡œ ë³€í™˜í•¨
 docs.corp <- tm_map(docs.corp, content_transformer(tolower))
 
-# ¿µ¹®ÀÚ ÀÌ¿ÜÀÇ ¹®ÀÚ Á¦°Å 
+# ì˜ë¬¸ì ì´ì™¸ì˜ ë¬¸ì ì œê±° 
 docs.corp <- tm_map(docs.corp, content_transformer(function(x) gsub("[^[:alpha:][:space:]]*", "", x)))
 
-# Stop words : stopwords("english") ¿¡ µî·ÏµÈ ´Ü¾î¸¦ ¸ğµÎ Á¦°ÅÇÔ (ex : i, me, my, am, is ...)
+# Stop words : stopwords("english") ì— ë“±ë¡ëœ ë‹¨ì–´ë¥¼ ëª¨ë‘ ì œê±°í•¨ (ex : i, me, my, am, is ...)
 docs.corp <- tm_map(docs.corp, removeWords, stopwords("english"))
 
-# Stemming (ex : making --> make, prices --> price) : apple --> appl, google --> googl ·Î º¯È¯µÊ (??)
+# Stemming (ex : making --> make, prices --> price) : apple --> appl, google --> googl ë¡œ ë³€í™˜ë¨ (??)
 stemmed <- tm_map(docs.corp, stemDocument)
 docs.corp <- lapply(stemmed, stemCompletion2, dictionary=docs.corp)
 
-# ºÒ±ÔÄ¢ µ¿»çÀÇ °ú°ÅÇü, °ú°ÅºĞ»çÇüÀ» ÇöÀçÇüÀ¸·Î º¯È¯ÇÔ
+# ë¶ˆê·œì¹™ ë™ì‚¬ì˜ ê³¼ê±°í˜•, ê³¼ê±°ë¶„ì‚¬í˜•ì„ í˜„ì¬í˜•ìœ¼ë¡œ ë³€í™˜í•¨
 docs.corp <- lapply(docs.corp, Verb2Infinitive)
 
 docs.corp <- Corpus(VectorSource(docs.corp))
 
-# Term document matrix & Document Term matrix »ı¼º
+# Term document matrix & Document Term matrix ìƒì„±
 tdm <- TermDocumentMatrix(docs.corp, control=list(wordLengths=c(1,Inf)))
 dtm <- as.DocumentTermMatrix(tdm)
 
-# tdm, dtm matrixx È®ÀÎ
+# tdm, dtm matrixx í™•ì¸
 # as.matrix(tdm)
 # as.matrix(dtm)
 
-# Latent Dirichlet Allocation. Topic ¼ö = 2°³
+# Latent Dirichlet Allocation. Topic ìˆ˜ = 2ê°œ
 lda <- LDA(dtm, k=2)
 
-# ÅäÇÈº° ´Ü¾î ºĞÆ÷
+# í† í”½ë³„ ë‹¨ì–´ ë¶„í¬
 t <- as.data.frame(posterior(lda)$term[1,])
 t1 <- cbind(row.names(t), t[,1])
 t1 <- t1[order(t1[,2], decreasing = TRUE),]
@@ -55,15 +55,15 @@ t2 <- cbind(row.names(t), t[,1])
 t2 <- t2[order(t2[,2], decreasing = TRUE),]
 topic <- cbind(t1, t2)
 colnames(topic) <- c("Topic-1$word", "Topic-1$beta", "Topic-2$word", "Topic-2$beta")
-cat("ÅäÇÈ º° ´Ü¾î ºĞÆ÷\n")
+cat("í† í”½ ë³„ ë‹¨ì–´ ë¶„í¬\n")
 print(head(topic, 7))
 
-# ¹®¼­º° ÅäÇÈ ºĞÆ÷
+# ë¬¸ì„œë³„ í† í”½ ë¶„í¬
 d <- as.data.frame(posterior(lda)$topic)
 colnames(d) <- c("Topic-1", "Topic-2")
 rownames(d) <- c("Doc-1", "Doc-2", "Doc-3", "Doc-4", "Doc-5")
 cat('\n')
-cat("¹®¼­º° ÅäÇÈ ºĞÆ÷\n")
+cat("ë¬¸ì„œë³„ í† í”½ ë¶„í¬\n")
 print(d)
 
 
