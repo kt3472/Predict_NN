@@ -1,27 +1,27 @@
 library(e1071)
-source('11-2.FeatureSetTA(2).R')
+source('FeatureSetTA(2).R')
 printf <- function(...) cat(sprintf(...))
 
-# ±â¼úÀû ÁöÇ¥·Î ±¸¼ºµÈ FeatureµéÀ» ´õ Ãß°¡ÇÏ¿© Á¤È®µµ°¡ Çâ»óµÇ´ÂÁö È®ÀÎÇÑ´Ù.
-# Features (16 °³) : spread, atr, smi, adx, boll, macd, obv, cci, rsi, candle(OHLC), 
-# volatility, voldiff (°¸º¯µ¿¼º°ú ÀåÁß º¯µ¿¼º Â÷ÀÌ), volume( 5ÀÏ Æò±Õ °Å·¡ ´ë±Ý)
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀÐ¾î¿Â´Ù
+# ê¸°ìˆ ì  ì§€í‘œë¡œ êµ¬ì„±ëœ Featureë“¤ì„ ë” ì¶”ê°€í•˜ì—¬ ì •í™•ë„ê°€ í–¥ìƒë˜ëŠ”ì§€ í™•ì¸í•œë‹¤.
+# Features (16 ê°œ) : spread, atr, smi, adx, boll, macd, obv, cci, rsi, candle(OHLC), 
+# volatility, voldiff (ê°­ë³€ë™ì„±ê³¼ ìž¥ì¤‘ ë³€ë™ì„± ì°¨ì´), volume( 5ì¼ í‰ê·  ê±°ëž˜ ëŒ€ê¸ˆ)
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ìž ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData('005930')
 
-# ±â¼úÀû ºÐ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ý¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTA2(p)
 
-# SVM À» »ý¼ºÇÑ´Ù
+# SVM ì„ ìƒì„±í•œë‹¤
 sv <- svm(class ~ ., data = ds$train, kernel="radial", cost=100, gamma=0.1)
 
-# Å×½ºÆ® µ¥ÀÌÅÍ ¼¼Æ®¸¦ ÀÌ¿ëÇÏ¿© ¼º´ÉÀ» È®ÀÎÇÑ´Ù
+# í…ŒìŠ¤íŠ¸ ë°ì´í„° ì„¸íŠ¸ë¥¼ ì´ìš©í•˜ì—¬ ì„±ëŠ¥ì„ í™•ì¸í•œë‹¤
 pred <- predict(sv, ds$test, type = "class")
 cm <- table(pred, ds$test$class, dnn=list('predicted', 'actual'))
 printf("\n* Confusion Matrix\n")
 print(cm)
 
 accuracy <- sum(diag(cm)) / sum(cm)
-printf("\n* Á¤È®µµ = %.4f\n\n", accuracy)
+printf("\n* ì •í™•ë„ = %.4f\n\n", accuracy)
 
 
 
