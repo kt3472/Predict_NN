@@ -1,30 +1,30 @@
-# HTS¿¡¼­ Á¾¸ñº°, ³¯Â¥º°·Î ¼öÁýÇÑ ¿Ü±¹ÀÎ, ±â°ü °³ÀÎÀÇ ¼ø °Å·¡·® µ¥ÀÌÅÍ¿¡¼­
-# ¿¬°ü ±ÔÄ¢À» Ã£¾Æº»´Ù.
+# HTSì—ì„œ ì¢…ëª©ë³„, ë‚ ì§œë³„ë¡œ ìˆ˜ì§‘í•œ ì™¸êµ­ì¸, ê¸°ê´€ ê°œì¸ì˜ ìˆœ ê±°ëž˜ëŸ‰ ë°ì´í„°ì—ì„œ
+# ì—°ê´€ ê·œì¹™ì„ ì°¾ì•„ë³¸ë‹¤.
 # ------------------------------------------------------------------------
 library(arules)
 library(arulesViz)
-source("6-1.MakeBasket.R")
+source("MakeBasket.R")
 
-# ¿ø½Ã µ¥ÀÌÅÍ¸¦ ÀÐ¾î¿Â´Ù
-x <- read.csv("data/¼ö±Þµ¥ÀÌÅÍ.csv", stringsAsFactors=FALSE)
+# ì›ì‹œ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
+x <- read.csv("data/ìˆ˜ê¸‰ë°ì´í„°.csv", stringsAsFactors=FALSE)
 
-# ¿ø½Ã µ¥ÀÌÅÍ¸¦ Item Matrix in sparce formatÀ¸·Î º¯ÇüÇÑ´Ù
-# 12 : ¿Ü±¹ÀÎ
+# ì›ì‹œ ë°ì´í„°ë¥¼ Item Matrix in sparce formatìœ¼ë¡œ ë³€í˜•í•œë‹¤
+# 12 : ì™¸êµ­ì¸
 tr <- MakeBasket(x, n=14, trade="Buy")
 
-# Item Matrix¸¦ È®ÀÎÇÑ´Ù (½Ã°¢È­)
+# Item Matrixë¥¼ í™•ì¸í•œë‹¤ (ì‹œê°í™”)
 image(tr[1:10])
 
-# °Å·¡ Á¾¸ñÀÇ ºñÀ²À» È®ÀÎÇÑ´Ù
+# ê±°ëž˜ ì¢…ëª©ì˜ ë¹„ìœ¨ì„ í™•ì¸í•œë‹¤
 itemFrequency(tr)
 itemFrequencyPlot(tr, col='green')
 
-# aprior ¾Ë°í¸®ÁòÀ¸·Î ¿¬°ü ±ÔÄ¢À» ºÐ¼®ÇÑ´Ù. (min support = 0.1, min confidence = 0.1)
+# aprior ì•Œê³ ë¦¬ì¦˜ìœ¼ë¡œ ì—°ê´€ ê·œì¹™ì„ ë¶„ì„í•œë‹¤. (min support = 0.1, min confidence = 0.1)
 rules <- apriori(data = tr, parameter = list(support = 0.1, confidence = 0.1, minlen=3))
 
-# ¿¬°ü ±ÔÄ¢À» È®ÀÎÇÑ´Ù. (Çâ»óµµ ¼ø¼­)
+# ì—°ê´€ ê·œì¹™ì„ í™•ì¸í•œë‹¤. (í–¥ìƒë„ ìˆœì„œ)
 inspect(sort(rules, by="lift")[1:10])
 
-# ¿¬°ü ±ÔÄ¢À» ³×Æ®¿öÅ© ÇüÅÂ·Î È®ÀÎÇÑ´Ù
+# ì—°ê´€ ê·œì¹™ì„ ë„¤íŠ¸ì›Œí¬ í˜•íƒœë¡œ í™•ì¸í•œë‹¤
 plot(sort(rules, by="lift")[1:30], method="graph")
 
