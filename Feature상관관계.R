@@ -1,5 +1,7 @@
+# install.packages("igraph")
+
 library(igraph)
-source('FeatureSetTA(2).R')
+source('FeatureSetTA.R')
 printf <- function(...) cat(sprintf(...))
 
 # 기술적 지표들의 상관관계를 관찰한다.
