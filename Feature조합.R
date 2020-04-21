@@ -1,17 +1,17 @@
 library(e1071)
-source('11-2.FeatureSetTA(2).R')
+source('FeatureSetTA.R')
 printf <- function(...) cat(sprintf(...))
 
-# ±â¼úÀû ºÐ¼® FeatureµéÀ» Á¶ÇÕÇÏ¿© Á¤È®µµ¸¦ ÃøÁ¤ÇØ º»´Ù.
+# ê¸°ìˆ ì  ë¶„ì„ Featureë“¤ì„ ì¡°í•©í•˜ì—¬ ì •í™•ë„ë¥¼ ì¸¡ì •í•´ ë³¸ë‹¤.
 # ex : 
-# ÃÑ 11°³ÀÇ Featureµé·Î ±¸¼ºµÈ µ¥ÀÌÅÍ ¼¼Æ®¿¡¼­ k°³ÀÇ FeatureµéÀ» Á¶ÇÕÇÏ¿© 
-# µ¥ÀÌÅÍ ¼¼Æ®¸¦ ±¸¼ºÇÑ´Ù. k=5°³¸¦ ¼±ÅÃÇÏ´Â Á¶ÇÕÀÇ °³¼ö´Â 462°³ ÀÓ.
+# ì´ 11ê°œì˜ Featureë“¤ë¡œ êµ¬ì„±ëœ ë°ì´í„° ì„¸íŠ¸ì—ì„œ kê°œì˜ Featureë“¤ì„ ì¡°í•©í•˜ì—¬ 
+# ë°ì´í„° ì„¸íŠ¸ë¥¼ êµ¬ì„±í•œë‹¤. k=5ê°œë¥¼ ì„ íƒí•˜ëŠ” ì¡°í•©ì˜ ê°œìˆ˜ëŠ” 462ê°œ ìž„.
 # 
-# 1¹ø Á¶ÇÕ : ATR, SMI, ADX, Bollinger, MACD --> 57.38%
-# 2¹ø Á¶ÇÕ : ATR, SMI, ADX, Bollinger, OBV --> 54.25% µî
+# 1ë²ˆ ì¡°í•© : ATR, SMI, ADX, Bollinger, MACD --> 57.38%
+# 2ë²ˆ ì¡°í•© : ATR, SMI, ADX, Bollinger, OBV --> 54.25% ë“±
 # 
-# k = 6, 7, 8 ... 11 ÀÎ °æ¿ìÀÇ ¸ðµç Á¶ÇÕÀ¸·Î Á¤È®µµ¸¦ °è»êÇØ º¸°í, ÀÇ¹ÌÀÖ´Â
-# Feature Á¶ÇÕÀÌ ÀÖ´ÂÁö Æò°¡ÇØ º»´Ù. (Á¾¸ñµµ ¹Ù²ã°¡¸é¼­ Æò°¡ÇØ º¸¾Æ¾ß ÇÔ.)
+# k = 6, 7, 8 ... 11 ì¸ ê²½ìš°ì˜ ëª¨ë“  ì¡°í•©ìœ¼ë¡œ ì •í™•ë„ë¥¼ ê³„ì‚°í•´ ë³´ê³ , ì˜ë¯¸ìžˆëŠ”
+# Feature ì¡°í•©ì´ ìžˆëŠ”ì§€ í‰ê°€í•´ ë³¸ë‹¤. (ì¢…ëª©ë„ ë°”ê¿”ê°€ë©´ì„œ í‰ê°€í•´ ë³´ì•„ì•¼ í•¨.)
 # -------------------------------------------------------------------------
 p <- getData('005930')
 
@@ -24,22 +24,22 @@ for (i in 1:nrow(c)) {
    r <- as.numeric(c[i,])
    com[r] <- 1
 
-   # ±â¼úÀû ºÐ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ý¼ºÇÑ´Ù
+   # ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
    ds <- FeatureSetTA2(p, com)
    
-   # SVM À» »ý¼ºÇÑ´Ù
+   # SVM ì„ ìƒì„±í•œë‹¤
    sv <- svm(class ~ ., data = ds$train, kernel="radial", cost=100, gamma=0.1)
    
-   # Å×½ºÆ® µ¥ÀÌÅÍ ¼¼Æ®¸¦ ÀÌ¿ëÇÏ¿© ¼º´ÉÀ» È®ÀÎÇÑ´Ù
+   # í…ŒìŠ¤íŠ¸ ë°ì´í„° ì„¸íŠ¸ë¥¼ ì´ìš©í•˜ì—¬ ì„±ëŠ¥ì„ í™•ì¸í•œë‹¤
    pred <- predict(sv, ds$test, type = "class")
    cm <- table(pred, ds$test$class, dnn=list('predicted', 'actual'))
    accuracy <- sum(diag(cm)) / sum(cm)
    c[i,]$accuracy <- accuracy
-   printf("%d : Á¤È®µµ = %.4f\n", i, accuracy)
+   printf("%d : ì •í™•ë„ = %.4f\n", i, accuracy)
 }
 
-# Feature ¼±ÅÃ¿¡ µû¸¥ Á¤È®µµÀÇ ºÐ»êÀ» À°¾ÈÀ¸·Î È®ÀÎÇÑ´Ù
-title <- sprintf("k = %d, Æò±Õ = %.2f, Ç¥ÁØÆíÂ÷ = %.2f %s", k, mean(c$accuracy)*100, sd(c$accuracy)*100, "%")
+# Feature ì„ íƒì— ë”°ë¥¸ ì •í™•ë„ì˜ ë¶„ì‚°ì„ ìœ¡ì•ˆìœ¼ë¡œ í™•ì¸í•œë‹¤
+title <- sprintf("k = %d, í‰ê·  = %.2f, í‘œì¤€íŽ¸ì°¨ = %.2f %s", k, mean(c$accuracy)*100, sd(c$accuracy)*100, "%")
 plot(density(c$accuracy), col='red', main=title)
 abline(v=0.5, col='blue')
 
