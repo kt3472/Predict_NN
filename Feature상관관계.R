@@ -1,31 +1,31 @@
 library(igraph)
-source('11-2.FeatureSetTA(2).R')
+source('FeatureSetTA(2).R')
 printf <- function(...) cat(sprintf(...))
 
-# ±â¼úÀû ÁöÇ¥µéÀÇ »ó°ü°ü°è¸¦ °üÂûÇÑ´Ù.
-# Yahoo »çÀÌÆ®·ÎºÎÅÍ »ï¼ºÀüÀÚ ÁÖ°¡ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Â´Ù
+# ê¸°ìˆ ì  ì§€í‘œë“¤ì˜ ìƒê´€ê´€ê³„ë¥¼ ê´€ì°°í•œë‹¤.
+# Yahoo ì‚¬ì´íŠ¸ë¡œë¶€í„° ì‚¼ì„±ì „ì ì£¼ê°€ ë°ì´í„°ë¥¼ ì½ì–´ì˜¨ë‹¤
 p <- getData('005930')
 
-# ±â¼úÀû ºĞ¼® Feature µ¥ÀÌÅÍ ¼¼Æ®¸¦ »ı¼ºÇÑ´Ù
+# ê¸°ìˆ ì  ë¶„ì„ Feature ë°ì´í„° ì„¸íŠ¸ë¥¼ ìƒì„±í•œë‹¤
 ds <- FeatureSetTA2(p)
 myClass <- ds$train$class
 ds$train$class <- NULL
 
-# Feature µé °£ÀÇ »ó°ü°è¼ö¸¦ ±¸ÇÑ´Ù (»ó°ü°è¼ö Çà·Ä)
+# Feature ë“¤ ê°„ì˜ ìƒê´€ê³„ìˆ˜ë¥¼ êµ¬í•œë‹¤ (ìƒê´€ê³„ìˆ˜ í–‰ë ¬)
 cm <- cor(ds$train)
 print(cm)
 
-# »ó°ü°è¼ö Çà·ÄÀ» ±×·¡ÇÁ ÇüÅÂ·Î ±×¸°´Ù. »ó°ü°è¼ö°¡ 0.3 ÀÌ»óÀÎ °Í.
+# ìƒê´€ê³„ìˆ˜ í–‰ë ¬ì„ ê·¸ë˜í”„ í˜•íƒœë¡œ ê·¸ë¦°ë‹¤. ìƒê´€ê³„ìˆ˜ê°€ 0.3 ì´ìƒì¸ ê²ƒ.
 g <- graph.adjacency(cm > 0.3, weighted=TRUE, mode="upper", diag = FALSE)
 
 par(mai=c(1,1,0.1,0.15), mar=c(1, 0, 1, 1), mgp=c(2,1,0), mfrow=c(1,1), cex=1, lwd=1)
 plot(g, vertex.size=25, vertex.color='green')
 
-# SMI ~ MACDÀÇ »ó°ü°ü°è È®ÀÎ
+# SMI ~ MACDì˜ ìƒê´€ê´€ê³„ í™•ì¸
 par(mfrow=c(1,2), mar=c(3, 3, 2, 2), mgp=c(1.5, 0.3, 0))
 title <- sprintf("Correlation = %.4f", cor(ds$train$smi, ds$train$macd))
 plot(x=ds$train$smi, y=ds$train$macd, xlim=c(-3,2.5), ylim=c(-3,2.5), xlab="SMI", ylab="MACD", main=title, pch=c(4,20)[unclass(myClass)], col=c('red', 'blue')[unclass(myClass)])
 
-# ATR ~ VOLATILITyÀÇ »ó°ü°ü°è È®ÀÎ
+# ATR ~ VOLATILITyì˜ ìƒê´€ê´€ê³„ í™•ì¸
 title <- sprintf("Correlation = %.4f", cor(ds$train$atr, ds$train$volatility))
 plot(x=ds$train$atr, y=ds$train$volatility, xlim=c(-1.5,3), ylim=c(-1.5,3), xlab="ATR", ylab="Volatility", main=title, pch=c(4,20)[unclass(myClass)], col=c('red', 'blue')[unclass(myClass)])
